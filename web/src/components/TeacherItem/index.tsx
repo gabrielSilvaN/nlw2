@@ -1,10 +1,33 @@
+/* eslint-disable react/jsx-no-target-blank */
 import React from 'react';
 
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 
+import api from '../../services/api';
+
 import './styles.css';
 
-export default function TeacherItem() {
+export interface Teacher {
+  id: number;
+  avatar: string;
+  bio: string;
+  cost: number;
+  name: string;
+  subject: string;
+  whatsapp: string;
+}
+
+interface TeacherItemProps {
+  teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+
+  function createNewConnection() {
+    api.post('connections', {
+      user_id: teacher.id
+    })
+  }
 
   return (
 
@@ -12,35 +35,33 @@ export default function TeacherItem() {
 
       <header>
 
-        <img src="https://scontent-gru2-2.xx.fbcdn.net/v/t1.0-9/10405657_734065550036943_2584552438691174469_n.jpg?_nc_cat=100&_nc_sid=09cbfe&_nc_ohc=nYXL--3CuxsAX99yVtz&_nc_oc=AQmyw4f7MAcBMe5CIsat52ZxZbgmf2j9_Dd90B9jwxt_BrUh4eJc3wcEYZU4kfZsKtc&_nc_ht=scontent-gru2-2.xx&oh=e5bb5d625a5973936759ac0fe0a356f6&oe=5F50254B" alt="Gabriel Silva" />
+        <img src={teacher.avatar} alt={teacher.name} />
 
         <div>
-          <strong>Gabriel Silva</strong>
-          <span>Matemática</span>
+          <strong>{teacher.name}</strong>
+          <span>{teacher.subject}</span>
         </div>
 
       </header>
 
       <p>
-        Amante dos números e de deduções matemáticas.
-            <br />
-            Indução matemática é o poder.
-          </p>
+        {teacher.bio}
+      </p>
 
       <footer>
 
         <p>
           Preço/Hora
-              <strong>R$ 35,00</strong>
+          <strong>R$ {teacher.cost}</strong>
         </p>
 
-        <button type="button">
+        <a target="_blank" onClick={createNewConnection} href={`https://wa.me/${teacher.whatsapp}`}> 
 
           <img src={whatsappIcon} alt="Whatsapp Icon" />
 
-              Entrar em contato
+          Entrar em contato
 
-            </button>
+        </a>
 
       </footer>
 
@@ -49,3 +70,5 @@ export default function TeacherItem() {
 
   );
 }
+
+export default TeacherItem;
